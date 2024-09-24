@@ -34,27 +34,74 @@ blogRouter.use('/*', async (c, next) => {
 // Bulk get posts (consider adding pagination)
 blogRouter.get('/bulk', async (c) => {
 	const prisma = new PrismaClient({ datasourceUrl: c.env?.DATABASE_URL }).$extends(withAccelerate());
-	const posts = await prisma.post.findMany({});
-	return c.json(posts);
+
+	const posts = await prisma.post.findMany({
+		select: {
+			content: true,
+			title: true,
+			id: true,
+			author: {
+				select: {
+					email: true, // Selecting email to extract name from it
+				}
+			}
+		}
+	});
+
+	// Map posts to include name extracted from email, but keep email too
+	const postsWithNames = posts.map(post => ({
+		...post,
+		author: {
+			email: post.author.email, // Keep the email field
+			name: post.author.email.split('@')[0], // Add a new 'name' field with extracted name
+		}
+	}));
+
+	return c.json(postsWithNames);
 });
+
 
 // Get a specific post by ID
 blogRouter.get('/:id', async (c) => {
-	const id = c.req.param('id');
-	const prisma = new PrismaClient({ datasourceUrl: c.env?.DATABASE_URL }).$extends(withAccelerate());
+    const id = c.req.param('id');
+    const prisma = new PrismaClient({ datasourceUrl: c.env?.DATABASE_URL }).$extends(withAccelerate());
 
-	try {
-		const post = await prisma.post.findUnique({ where: { id } });
-		if (!post) {
-			c.status(404);
-			return c.json({ error: "Post not found" });
-		}
-		return c.json(post);
-	} catch (error) {
-		console.error("Error fetching post:", error);
-		c.status(500);
-		return c.json({ error: "Error fetching post" });
-	}
+    try {
+        const onepost = await prisma.post.findUnique({
+            where: { id },
+            select: {
+                content: true,
+                title: true,
+                id: true,
+                author: {
+                    select: {
+                        email: true, // Selecting email to extract name from it
+                    }
+                }
+            }
+        });
+
+        // Check if the post was found
+        if (!onepost) {
+            c.status(404);
+            return c.json({ error: "Post not found" });
+        }
+
+        // Construct the response with the author's name
+        const postWithName = {
+            ...onepost,
+            author: {
+                email: onepost.author.email, // Keep the email field
+                name: onepost.author.email.split('@')[0], // Add a new 'name' field with extracted name
+            }
+        };
+
+        return c.json(postWithName);
+    } catch (error) {
+        console.error("Error fetching post:", error);
+        c.status(500);
+        return c.json({ error: "Error fetching post" });
+    }
 });
 
 // Add a new post
