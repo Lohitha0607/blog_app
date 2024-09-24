@@ -16,7 +16,7 @@ export const useBlog=({id}:{id:string})=>{
      
     const [loading, setLoading] = useState(true);
     const [blog, setBlog] = useState<Blog>(); // Initialize as an array of Blog
-    const [error, setError] = useState<string | null>(null); // Track errors
+    
 
     useEffect(() => {
         const fetchBlog = async () => {
@@ -35,7 +35,7 @@ export const useBlog=({id}:{id:string})=>{
                 setBlog(response.data);
             } catch (error: any) {
                 console.error("Error fetching blogs:", error);
-                setError(error.message || "Something went wrong while fetching blogs.");
+               
             } finally {
                 setLoading(false);
             }
@@ -50,7 +50,7 @@ export const useBlog=({id}:{id:string})=>{
 export const useBlogs = () => {
     const [loading, setLoading] = useState(true);
     const [blogs, setBlogs] = useState<Blog[]>([]); // Initialize as an array of Blog
-    const [error, setError] = useState<string | null>(null); // Track errors
+     // Track errors
 
     useEffect(() => {
         const fetchBlogs = async () => {
@@ -69,7 +69,7 @@ export const useBlogs = () => {
                 setBlogs(response.data);
             } catch (error: any) {
                 console.error("Error fetching blogs:", error);
-                setError(error.message || "Something went wrong while fetching blogs.");
+                
             } finally {
                 setLoading(false);
             }

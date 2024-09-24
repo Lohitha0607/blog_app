@@ -11,7 +11,7 @@ export const Blog = () => {
         id: id || ""
     }); // Destructuring the returned array
 
-    if (loading) {
+    if (loading || !blog) {
         return (
             <div>
                 <Appbar />
