@@ -1,6 +1,7 @@
 
 # Inkwell
 Inkwell is a full-stack blogging platform that allows users to sign up, sign in, read, and publish blogs. Built with a modern tech stack, this application emphasizes secure authentication and a seamless user experience.
+Visit the site here ->>>>   https://blog-app-five-neon-17.vercel.app/
 
 
 ## Features
