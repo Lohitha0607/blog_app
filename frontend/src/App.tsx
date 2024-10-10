@@ -15,11 +15,12 @@ function App() {
     <>
       <BrowserRouter>
       <Routes>
-     <Route path='/signup' element={<Signup></Signup>}/>
+      <Route path='/' element={<Signup></Signup>}/>
      <Route path='/signin' element={<Signin></Signin>}/>
      <Route path='/blogs' element={<Blogs></Blogs>}/>
      <Route path='/blog/:id' element={<Blog></Blog>}/>
      <Route path='/publish' element={<Publish></Publish>}/>
+
 
       </Routes>
       </BrowserRouter>
